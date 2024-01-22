@@ -57,7 +57,9 @@ export class LinkedList {
 		while (index > 0 && currentNode) {
 			currentNode = currentNode.nextNode;
 			index--;
+			console.log(currentNode);
 		}
+
 		return currentNode ?? `The index ${startIndex} out of list`;
 	}
 
@@ -138,12 +140,14 @@ export class LinkedList {
 			return `wrong value`;
 		}
 		const range = this.size() - 1;
-		if (index === 0) {
-			this.head = this.at(index + 1);
-			return;
-		}
+
 		if (index === range) {
 			this.pop();
+			return;
+		}
+
+		if (index === 0) {
+			this.head = this.at(index + 1);
 			return;
 		}
 		if (index > range) {

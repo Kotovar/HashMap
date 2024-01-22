@@ -79,7 +79,27 @@ class HashMap {
 		return !this._findLinkedListIndex(key)[2];
 	}
 
-	remove(key) {}
+	remove(key) {
+		let result = this._findLinkedListIndex(key);
+
+		if (!result[2]) {
+			result[1].removeAt(result[0]);
+			this.size--;
+			return true;
+		}
+
+		return false;
+	}
+
+	length() {
+		return this.size;
+	}
+
+	clear() {
+		this.size = 0;
+		this.capacity = 16;
+		this.buckets = Array.from({length: this.capacity}, () => new LinkedList());
+	}
 }
 
 let test = new HashMap();
@@ -92,9 +112,19 @@ test.set('1', 'dasda');
 test.set(65, 'fsfsd');
 test.set(645645, 'fsdfsd');
 test.set(0, 'sdfsdfsdf');
-test.set([1, 2], 'sdfsdfsdf');
+test.set(7, 'sdfsdfsdf');
 // console.log(test.buckets);
-console.log(test.get(16));
-console.log(test.has(16));
-console.log(test.has(4324234));
+// console.log(test.get(16));
+// console.log(test.has(16));
+// console.log(test.has(4324234));
+// console.log(test.buckets);
+// console.log(test.buckets);
+test.remove(16);
+console.log(test.length());
+// console.log(test.remove(0));
+// console.log(test.remove(645645));
+// console.log(test.remove(21));
 // console.log(test);
+console.log(test);
+console.log(test.clear());
+console.log(test);
