@@ -103,14 +103,27 @@ export class LinkedList {
 		return -1;
 	}
 
-	toString() {
+	toString(mode) {
 		let currentNode = this.head;
 		let string = '';
-		while (currentNode !== null) {
-			string += `( ${currentNode.key}: ${currentNode.value} ) -> `;
-			currentNode = currentNode.nextNode;
+		if (mode === 'key') {
+			while (currentNode !== null) {
+				string += ' ' + currentNode.key;
+				currentNode = currentNode.nextNode;
+			}
+		} else if (mode === 'value') {
+			while (currentNode !== null) {
+				string += ' ' + currentNode.value;
+				currentNode = currentNode.nextNode;
+			}
+		} else if (mode === 'entries') {
+			string = [];
+			while (currentNode !== null) {
+				string.push([currentNode.key, currentNode.value]);
+				currentNode = currentNode.nextNode;
+			}
 		}
-		return (string += null);
+		return string;
 	}
 
 	insertAt(key, value, index) {

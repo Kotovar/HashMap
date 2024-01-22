@@ -100,6 +100,30 @@ class HashMap {
 		this.capacity = 16;
 		this.buckets = Array.from({length: this.capacity}, () => new LinkedList());
 	}
+
+	_iteration(mode) {
+		let result = [];
+		for (let list of this.buckets) {
+			if (list.size() !== 0) {
+				mode !== 'entries'
+					? result.push(...list.toString(mode).trim().split(' '))
+					: result.push(list.toString(mode));
+			}
+		}
+		return result;
+	}
+
+	keys() {
+		return this._iteration('key');
+	}
+
+	values() {
+		return this._iteration('value');
+	}
+
+	entries() {
+		return this._iteration('entries').flat();
+	}
 }
 
 let test = new HashMap();
@@ -120,11 +144,15 @@ test.set(7, 'sdfsdfsdf');
 // console.log(test.buckets);
 // console.log(test.buckets);
 test.remove(16);
+// console.log(test.length());
+console.log(test.keys());
+console.log(test.values());
+console.log(test.entries());
 console.log(test.length());
 // console.log(test.remove(0));
 // console.log(test.remove(645645));
 // console.log(test.remove(21));
 // console.log(test);
-console.log(test);
-console.log(test.clear());
-console.log(test);
+// console.log(test);
+// console.log(test.clear());
+// console.log(test);
