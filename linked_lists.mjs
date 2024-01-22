@@ -103,7 +103,7 @@ export class LinkedList {
 		return -1;
 	}
 
-	toString(mode) {
+	toString(mode = 'entries') {
 		let currentNode = this.head;
 		let string = '';
 		if (mode === 'key') {

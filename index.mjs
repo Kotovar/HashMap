@@ -1,23 +1,4 @@
-// if (index < 0 || index >= buckets.length) {
-//     throw new Error("Trying to access index out of bound");
-//   }
-
 import {LinkedList} from './linked_lists.mjs';
-
-// let list = new LinkedList();
-// list.append(5, 'test').append(7, 'method');
-// console.log(list.toString());
-// let key = 5;
-// let index = list.find(key);
-
-// if (index < 0) {
-// 	console.log('нет такого индекса');
-// } else {
-// 	list.insertAt(key, 'changed', index);
-// 	list.removeAt(index + 1);
-// }
-
-// console.log(list.toString());
 
 class HashMap {
 	constructor(capacity = 16) {
@@ -28,7 +9,7 @@ class HashMap {
 	size = 0;
 	loadFactor = 0.75;
 
-	hash(string) {
+	hash(string, capacity) {
 		let hashCode = 0;
 
 		const primeNumber = 31;
@@ -36,7 +17,30 @@ class HashMap {
 			hashCode = primeNumber * hashCode + string.charCodeAt(i);
 		}
 
-		return hashCode % this.capacity;
+		return hashCode % capacity;
+	}
+
+	_resize() {
+		if (this.size >= this.capacity * this.loadFactor) {
+			const tempArray = Array.from(
+				{length: this.capacity * 2},
+				() => new LinkedList(),
+			);
+
+			for (let list of this.buckets) {
+				let node = list.head;
+				while (node !== null) {
+					let newHashCode = this.hash(node.key.toString(), this.capacity * 2);
+
+					tempArray[newHashCode].append(node.key, node.value);
+
+					node = node.nextNode;
+				}
+			}
+
+			this.buckets = tempArray;
+			this.capacity = this.capacity * 2;
+		}
 	}
 
 	_findLinkedListIndex(key) {
@@ -44,7 +48,7 @@ class HashMap {
 			throw new Error('key must be a number or string');
 		}
 
-		let hashCode = this.hash(key.toString()); //число от 0 до 15 для хэша
+		let hashCode = this.hash(key.toString(), this.capacity); //число от 0 до 15 для хэша
 		let list = this.buckets[hashCode]; // получаем связный список
 		let keyInList = list.find(key); //ищем в списке ключ
 		return [
@@ -59,6 +63,9 @@ class HashMap {
 		if (check) {
 			list.append(key, value);
 			this.size++;
+			if (this.size >= this.capacity * this.loadFactor) {
+				this._resize();
+			}
 			return;
 		}
 
@@ -129,26 +136,37 @@ class HashMap {
 let test = new HashMap();
 
 test.set(16, 'Jouse');
-test.set(21, 'Jouse');
+test.set(21, 'аыв');
+test.set(16, 'аываыв');
+test.set(23423, 'аываыв');
+test.set(23423, 'ываывааыв');
+test.set(2342, 'аываываыв');
+test.set(23432, 'ываываыва');
+test.set(23423, 'Joываываывuse');
+test.set(23432, 'Joаываываuse');
+test.set(423, 'Joываываuse');
 test.set(16, 'New');
 test.set(8, 'dasdsa');
 test.set('1', 'dasda');
 test.set(65, 'fsfsd');
 test.set(645645, 'fsdfsd');
 test.set(0, 'sdfsdfsdf');
-test.set(7, 'sdfsdfsdf');
 // console.log(test.buckets);
 // console.log(test.get(16));
 // console.log(test.has(16));
 // console.log(test.has(4324234));
 // console.log(test.buckets);
 // console.log(test.buckets);
-test.remove(16);
+// test.remove(16);
 // console.log(test.length());
-console.log(test.keys());
-console.log(test.values());
+// console.log(test.keys());
+// console.log(test.values());
 console.log(test.entries());
-console.log(test.length());
+console.log(test);
+console.log(test.get(8));
+console.log(test.entries());
+console.log(test);
+console.log(test.get(8));
 // console.log(test.remove(0));
 // console.log(test.remove(645645));
 // console.log(test.remove(21));
