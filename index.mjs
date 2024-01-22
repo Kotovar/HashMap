@@ -39,33 +39,62 @@ class HashMap {
 		return hashCode % this.capacity;
 	}
 
-	set(key, value) {
+	_findLinkedListIndex(key) {
+		if (typeof key !== 'number' && typeof key !== 'string') {
+			throw new Error('key must be a number or string');
+		}
+
 		let hashCode = this.hash(key.toString()); //число от 0 до 15 для хэша
 		let list = this.buckets[hashCode]; // получаем связный список
 		let keyInList = list.find(key); //ищем в списке ключ
-		if (keyInList === `The current LinkedList is empty` || keyInList === -1) {
+		return [
+			keyInList,
+			list,
+			keyInList === `The current LinkedList is empty` || keyInList === -1,
+		];
+	}
+
+	set(key, value) {
+		let [index, list, check] = this._findLinkedListIndex(key);
+		if (check) {
 			list.append(key, value);
 			this.size++;
 			return;
 		}
 
-		list.insertAt(key, value, keyInList);
-		list.removeAt(keyInList + 1);
+		list.insertAt(key, value, index);
+		list.removeAt(index + 1);
 	}
 
-	// get(key) {}
+	get(key) {
+		let [index, list, check] = this._findLinkedListIndex(key);
+		if (check) {
+			return null;
+		}
 
-	// has(key) {}
+		return list.at(index).value;
+	}
+
+	has(key) {
+		return !this._findLinkedListIndex(key)[2];
+	}
+
+	remove(key) {}
 }
 
 let test = new HashMap();
-// console.log(test.hash('Fred'));
 
 test.set(16, 'Jouse');
 test.set(21, 'Jouse');
 test.set(16, 'New');
 test.set(8, 'dasdsa');
-test.set(1, 'dasda');
+test.set('1', 'dasda');
 test.set(65, 'fsfsd');
 test.set(645645, 'fsdfsd');
 test.set(0, 'sdfsdfsdf');
+test.set([1, 2], 'sdfsdfsdf');
+// console.log(test.buckets);
+console.log(test.get(16));
+console.log(test.has(16));
+console.log(test.has(4324234));
+// console.log(test);
